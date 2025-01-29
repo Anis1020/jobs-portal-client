@@ -5,8 +5,9 @@ const Navbar = () => {
   const { user } = useAuth();
   const navLink = (
     <>
-      <NavLink>Home</NavLink>
-      <NavLink>contact</NavLink>
+      <NavLink to={"/"}>Home</NavLink>
+      <NavLink to={"/addJob"}>Add Job</NavLink>
+      <NavLink to={"/contact"}>contact</NavLink>
     </>
   );
   return (

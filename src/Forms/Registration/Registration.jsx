@@ -6,14 +6,15 @@ import useAuth from "../../Hooks/useAuth";
 const Registration = () => {
   const [showPass, setShowPass] = useState(true);
   const { createUser } = useAuth();
-  console.log(showPass);
+
   const handleRegister = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
-    const userInfo = { name, email, password };
+    const accepted = form.terms.checked;
+    const userInfo = { name, email, password, accepted };
     console.log(userInfo);
     createUser(email, password)
       .then((res) => {
@@ -77,7 +78,11 @@ const Registration = () => {
                 className="absolute right-3 top-5 p-3 "
               >
                 <FaEye />
-              </span>
+              </span>{" "}
+              <label className="label mt-2">
+                <input type="checkbox" name="terms" />
+                <span className="label-text">Accept our terms & condition</span>
+              </label>
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Registration</button>
