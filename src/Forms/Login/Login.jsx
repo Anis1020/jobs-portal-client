@@ -1,3 +1,6 @@
+import { FaGithub, FaGoogle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 const Login = () => {
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -43,6 +46,23 @@ const Login = () => {
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
+          <div className="space-y-4 py-4">
+            <div className="flex gap-5 justify-evenly">
+              <span>
+                {" "}
+                <FaGoogle />
+                Google{" "}
+              </span>
+              <span>
+                {" "}
+                <FaGithub />
+                GitHub{" "}
+              </span>
+            </div>
+            <h2 className="text-center">
+              Already have an account? <Link to={"/register"}>Register</Link>{" "}
+            </h2>
+          </div>
         </div>
       </div>
     </div>
