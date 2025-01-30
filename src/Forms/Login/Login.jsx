@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaEye, FaGithub, FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
+import { sendPasswordResetEmail } from "firebase/auth";
+import auth from "../../firebaseConfig/firebaseConfig";
 
 const Login = () => {
+  const { loginUser } = useAuth;
   const [showPass, setShowPass] = useState(false);
+  const emailRef = useRef();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -11,6 +16,34 @@ const Login = () => {
     const email = form.email.value;
     const password = form.password.value;
     console.log(email, password);
+    loginUser(email, password)
+      .then((res) => {
+        console.log(res.user);
+        //if user email not verify then check here
+        // if (!res.user.emailVerified) {
+        //   console.log('plz verify your email');
+        // }
+      })
+      .catch((error) => {
+        console.log(error.massage);
+      });
+  };
+
+  const handleResetPass = () => {
+    console.log("pass reset call", emailRef.current.value);
+    const email = emailRef.current.value;
+    if (!email) {
+      console.log("plz provide a valid email");
+    } else {
+      //send pass reset email
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alert("plz check your email");
+        })
+        .catch((err) => {
+          console.log(err.massage);
+        });
+    }
   };
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -32,6 +65,7 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
+                ref={emailRef}
                 placeholder="email"
                 className="input input-bordered"
                 required
@@ -54,7 +88,7 @@ const Login = () => {
               >
                 <FaEye />
               </span>
-              <label className="label">
+              <label onClick={handleResetPass} className="label">
                 <a href="#" className="label-text-alt link link-hover">
                   Forgot password?
                 </a>

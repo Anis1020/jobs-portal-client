@@ -2,6 +2,8 @@ import { useState } from "react";
 import { FaEye, FaGithub, FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
+import Swal from "sweetalert2";
 
 const Registration = () => {
   const [showPass, setShowPass] = useState(true);
@@ -13,12 +15,28 @@ const Registration = () => {
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
+    const photo = form.photo.value;
     const accepted = form.terms.checked;
-    const userInfo = { name, email, password, accepted };
+    const userInfo = { name, email, photo, password, accepted };
     console.log(userInfo);
     createUser(email, password)
       .then((res) => {
         console.log(res.user);
+        //send email verification
+        sendEmailVerification(res.user)
+          .then(() => {
+            console.log("plx check your email and verify");
+          })
+          .catch((err) => {
+            console.log(err.massage);
+          });
+        updateProfile(res.user, {
+          displayName: name,
+          photoURL: photo,
+        });
+        Swal.fire({
+          title: "user created successfully",
+        });
       })
       .catch((error) => {
         console.log(error.massage);
@@ -58,6 +76,18 @@ const Registration = () => {
                 type="email"
                 name="email"
                 placeholder="email"
+                className="input input-bordered"
+                required
+              />
+            </div>{" "}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                type="text"
+                name="photo"
+                placeholder="Photo"
                 className="input input-bordered"
                 required
               />
